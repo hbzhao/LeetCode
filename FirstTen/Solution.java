@@ -463,15 +463,35 @@ public class Solution {
         return ans;
     }
 
+    private void swap(int[] array,int index1,int index2){
+        int temp=array[index1];
+        array[index1]=array[index2];
+        array[index2]=temp;
+    }
+
+    //排除所有不能交换的情况，包括nums[i]<=0,>length,==i+1,==nums[nums[i]-1]
+    public int firstMissingPositive(int[] nums) {
+
+        int i=0;
+        while (i<nums.length){
+            if(nums[i]==i+1||nums[i]>nums.length||nums[i]<=0) i++;
+            else if(nums[nums[i]-1]!=nums[i]) swap(nums,i,nums[i]-1);
+            else i++;
+        }
+        i=0;
+        while (i<nums.length&&nums[i]==i+1) i++;
+        return i+1;
+    }
+
 
     public static void main(String[] args){
         Solution s=new Solution();
-        int[] nums={-1,0,1,2,-1,-4};
+        int[] nums={2};
         s.twoSum(nums,6);
         s.addTwoNumbers(ListNode.stringToListNode("[2,4,3]"),ListNode.stringToListNode("[5,6,4]"));
         s.lengthOfLongestSubstring("aab");
         int[] t=new int[0];
         int[] t1={10,1,2,7,6,1,5};
-        s.combinationSum2(t1,8);
+        s.firstMissingPositive(nums);
     }
 }
