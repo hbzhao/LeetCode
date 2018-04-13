@@ -337,6 +337,132 @@ public class Solution {
 
 
 
+    public int[] searchRange(int[] nums, int target) {
+        int[] ans=new int[2];
+        Arrays.fill(ans,-1);
+        if(nums.length==0) return ans;
+        int left=0;
+        int right=nums.length-1;
+        int mid=(left+right)/2;
+        while (left<right){
+            if(nums[mid]<target) left=mid+1;
+            else right=mid;
+            mid=(left+right)/2;
+        }
+        if(nums[left]==target) ans[0]=left;
+        else return ans;
+        right=nums.length-1;
+        while (left<right){
+            mid=(left+right)/2+1;//important make mid biased to right
+            if(nums[mid]>target) right=mid-1;
+            else left=mid;
+        }
+        ans[1]=right;
+        return ans;
+    }
+
+    public boolean isValidSudoku(char[][] board) {
+        for(int i=0;i<9;i++) {
+            HashSet<Character> row=new HashSet<>();
+            HashSet<Character> column=new HashSet<>();
+            HashSet<Character> cube=new HashSet<>();
+            for(int j=0;j<9;j++){
+                if(board[i][j]!='.'&&!row.add(board[i][j])){
+                    return false;
+                }
+                if(board[j][i]!='.'&&!column.add(board[j][i])){
+                    return false;
+                }
+                int indexRow=(i/3)*3;
+                int indexCol=(i%3)*3;
+                if(board[j/3+indexRow][j%3+indexCol]!='.'&&!cube.add(board[j/3+indexRow][j%3+indexCol])){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public String countAndSay(int n) {
+        String begin="11";
+        if(n==1) return "1";
+        if(n==2) return begin;
+
+        for(int i=2;i<n;i++){
+            StringBuilder temp=new StringBuilder();
+            int sum=1;
+            for(int j=0;j<begin.length()-1;j++){
+
+                if(begin.charAt(j)!=begin.charAt(j+1)){
+                    temp.append(sum);
+                    temp.append(begin.charAt(j));
+                    sum=1;
+                }else {
+                    sum++;
+                }
+            }
+                temp.append(sum);
+                temp.append(begin.charAt(begin.length()-1));
+
+            begin=temp.toString();
+        }
+        return begin;
+    }
+
+    private void helpCombinationSum(int[] candidate,int target,ArrayList<Integer> t,List<List<Integer>> ans,int start){
+        for(int i=start;i<candidate.length;i++){
+            if(candidate[i]>target) {
+                return;
+            }
+            if(candidate[i]==target) {
+                t.add(candidate[i]);
+                ans.add(new ArrayList<>(t));
+                t.remove(t.size()-1);
+                return;
+            }
+            else{
+                t.add(candidate[i]);
+                helpCombinationSum(candidate,target-candidate[i],t,ans,i);
+                t.remove(t.size()-1);
+            }
+        }
+    }
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> ans=new ArrayList<>();
+        helpCombinationSum(candidates,target,new ArrayList<>(),ans,0);
+        return ans;
+    }
+
+
+    private void helpCombinationSum2(int[] candidates,int target,ArrayList<Integer> t,List<List<Integer>> ans,int start){
+
+        if(target==0){
+            ans.add(new ArrayList<>(t));
+            return;
+        }
+        if(target<0){
+            return;
+        }
+
+        for (int i = start; i < candidates.length; i++) {
+            if (i > start && candidates[i] == candidates[i - 1]) continue;
+            t.add(candidates[i]);
+            helpCombinationSum2(candidates, target - candidates[i], t, ans, i + 1);
+            t.remove(t.size() - 1);
+        }
+
+
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> ans=new ArrayList<>();
+        helpCombinationSum2(candidates,target,new ArrayList<>(),ans,0);
+        return ans;
+    }
+
 
     public static void main(String[] args){
         Solution s=new Solution();
@@ -345,9 +471,7 @@ public class Solution {
         s.addTwoNumbers(ListNode.stringToListNode("[2,4,3]"),ListNode.stringToListNode("[5,6,4]"));
         s.lengthOfLongestSubstring("aab");
         int[] t=new int[0];
-        int[] t1={1,2,3,4};
-        s.findMedianSortedArrays(t,t1);
-        s.longestPalindrome("dabae");
-        s.isMatch("aaa","aa*a");
+        int[] t1={10,1,2,7,6,1,5};
+        s.combinationSum2(t1,8);
     }
 }
