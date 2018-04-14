@@ -484,6 +484,50 @@ public class Solution {
     }
 
 
+
+    public int trap(int[] height) {
+        int l=0;
+        int r=height.length-1;
+        int sum=0;
+        int lMax=0;
+        int rMax=0;
+        while (l<=r){
+            lMax=Math.max(lMax,height[l]);
+            rMax=Math.max(rMax,height[r]);
+            if(lMax<rMax){
+                sum+=lMax-height[l];
+                l++;
+            }else {
+                sum+=rMax-height[r];
+                r--;
+            }
+        }
+        return sum;
+    }
+
+    public String multiply(String num1, String num2) {
+       int n=num1.length();
+       int m=num2.length();
+       int[] pos=new int[n+m];
+       for(int i=m-1;i>=0;i--){
+           for (int j=n-1;j>=0;j--){
+               int mul=(num1.charAt(j)-'0')*(num2.charAt(i)-'0');
+               int p1=i+j,p2=i+j+1;//p1是十位 p2是个位
+               int sum=mul+pos[p2];
+               pos[p1]+=sum/10;
+               pos[p2]=sum%10;
+           }
+       }
+       StringBuilder ans=new StringBuilder();
+        for(int p:pos){
+            if(!(ans.length()==0&&p==0)){
+                ans.append(p);
+            }
+        }
+        return ans.length()==0?"0":ans.toString();
+    }
+
+
     public static void main(String[] args){
         Solution s=new Solution();
         int[] nums={2};
@@ -491,7 +535,9 @@ public class Solution {
         s.addTwoNumbers(ListNode.stringToListNode("[2,4,3]"),ListNode.stringToListNode("[5,6,4]"));
         s.lengthOfLongestSubstring("aab");
         int[] t=new int[0];
-        int[] t1={10,1,2,7,6,1,5};
+        int[] t1={0,1,0,2,1,0,1,3,2,1,2,1};
         s.firstMissingPositive(nums);
+        s.trap(t1);
+        s.multiply("123","456");
     }
 }
