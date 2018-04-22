@@ -394,6 +394,32 @@ public class Solution {
         return ans;
     }
 
+
+    private void helpPermuteUnique(int[] nums,List<List<Integer>> ans,ArrayList<Integer> t,boolean[] used){
+
+        if(t.size()==nums.length){
+            ans.add(new ArrayList<>(t));
+            return;
+        }
+        for(int i=0;i<nums.length;i++){
+            if(used[i]) continue;
+            if(i>0&&nums[i-1]==nums[i]&&!used[i-1]) continue;
+            t.add(nums[i]);
+            used[i]=true;
+            helpPermuteUnique(nums,ans,t,used);
+            used[i]=false;
+            t.remove(t.size()-1);
+        }
+    }
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans=new ArrayList<>();
+        if(nums.length==0) return ans;
+        boolean[] used=new boolean[nums.length];
+        Arrays.sort(nums);
+        helpPermuteUnique(nums,ans,new ArrayList<>(),used);
+        return ans;
+    }
+
     public int search(int[] nums, int target) {
         int left=0;
         int right=nums.length-1;
@@ -415,6 +441,48 @@ public class Solution {
             }
         }
         return -1;
+    }
+    private void swap(int[] array,int index1,int index2){
+        int temp=array[index1];
+        array[index1]=array[index2];
+        array[index2]=temp;
+    }
+    private void swapMatrixUD(int[][] matrix,int u,int d){
+        int[] t=matrix[u];
+        matrix[u]=matrix[d];
+        matrix[d]=t;
+    }
+
+    public void rotate(int[][] matrix) {
+        int u=0,l=0;
+        int d=matrix.length,r=matrix[0].length;
+        for(int i=u,j=d-1;i<j;i++,j--){
+            swapMatrixUD(matrix,i,j);
+        }
+        for(int i=0;i<matrix.length;i++){
+            for(int j=i+1;j<matrix.length;j++){
+                int t=matrix[i][j];
+                matrix[i][j]=matrix[j][i];
+                matrix[j][i]=t;
+            }
+        }
+    }
+
+    public List<List<String>> groupAnagrams(String[] strs) {
+        List<List<String>> ans=new ArrayList<>();
+        if(strs.length==0) return ans;
+        HashMap<String,ArrayList<String>> dic=new HashMap<>();
+        for (String s:strs){
+            char[] tmp=s.toCharArray();
+            Arrays.sort(tmp);
+            String k=String.valueOf(tmp);
+            if(!dic.containsKey(k)) dic.put(k,new ArrayList<String>());
+            dic.get(k).add(s);
+        }
+        for(List l:dic.values()){
+            ans.add(l);
+        }
+        return ans;
     }
 
 /********************************************************************/
@@ -463,11 +531,13 @@ public class Solution {
     }
 
     public static void main(String[] args) throws IOException {
-        int[] nums={1,3,5,6};
+        int[] nums={1,1,2};
         Solution s=new Solution();
         s.searchInsert(nums,5);
-        String[] array={"aa","aa","aa"};
+        String[] array={"eat", "tea", "tan", "ate", "nat", "bat"};
         s.longestValidParentheses("(()(((()");
+        s.permuteUnique(nums);
+        s.groupAnagrams(array);
     }
 
 }
