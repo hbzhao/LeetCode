@@ -1,5 +1,7 @@
 package LeetCode.bfs;
 
+import LeetCode.utils.TreeNode;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;

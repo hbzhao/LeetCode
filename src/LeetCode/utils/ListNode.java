@@ -1,9 +1,12 @@
-package LeetCode.FirstTen;
+package LeetCode.utils;
 
 public class ListNode {
-    int val;
-    ListNode next;
-    ListNode(int x) { val = x; }
+    public int val;
+    public ListNode next;
+
+    public ListNode(int x) {
+        val = x;
+    }
 
     public static int[] stringToIntegerArray(String input) {
         input = input.trim();
@@ -14,7 +17,7 @@ public class ListNode {
 
         String[] parts = input.split(",");
         int[] output = new int[parts.length];
-        for(int index = 0; index < parts.length; index++) {
+        for (int index = 0; index < parts.length; index++) {
             String part = parts[index].trim();
             output[index] = Integer.parseInt(part);
         }
@@ -28,7 +31,7 @@ public class ListNode {
         // Now convert that list into linked list
         ListNode dummyRoot = new ListNode(0);
         ListNode ptr = dummyRoot;
-        for(int item : nodeValues) {
+        for (int item : nodeValues) {
             ptr.next = new ListNode(item);
             ptr = ptr.next;
         }
